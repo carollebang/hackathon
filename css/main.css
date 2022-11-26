@@ -132,6 +132,13 @@ div.stacktrace {
   width: 660px;
 }
 
+#register-image{
+  margin-top: 80px;
+  border-radius: 10px;
+  height: 550px;
+  width: 660px;
+}
+
 #title {
   text-align: center;
 }
