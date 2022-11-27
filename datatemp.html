@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Nemisa Datathon</title>
+    <meta name="description" content="description here">
+    <meta name="keywords" content="keywords,here">
+
+    <link rel="stylesheet" type="text/css"  href="css/index.css">
+    <link rel="stylesheet" type="text/css"  href="css/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,700,800" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"/>
+    <!--Replace with your tailwind.css once created-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+
+    <style>
+        .body-bg {
+            background-color: #9921e8;
+            background-image: linear-gradient(315deg, #9921e8 0%, #5f72be 74%);
+        }
+        .nunito {
+            font-family: 'nunito', font-sans;
+        }
+        
+        .border-b-1 {
+            border-bottom-width: 1px;
+        }
+        
+        .border-l-1 {
+            border-left-width: 1px;
+        }
+        
+        hover\:border-none:hover {
+            border-style: none;
+        }
+        
+        #sidebar {
+            transition: ease-in-out all .3s;
+            z-index: 9999;
+        }
+        
+        #sidebar span {
+            opacity: 0;
+            position: absolute;
+            transition: ease-in-out all .1s;
+        }
+        
+        #sidebar:hover {
+            width: 150px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            /*shadow-2xl*/
+        }
+        
+        #sidebar:hover span {
+            opacity: 1;
+        }
+    </style>
+
+</head>
+
+<body class="flex h-screen bg-gray-400 font-sans">
+
+    <!-- Side bar-->
+    <div id="sidebar" class="h-screen w-16 menu bg-gray-450 text-white px-4 flex items-center nunito static fixed shadow">
+
+        <ul class="list-reset ">
+            <li class="my-2 md:my-0">
+                <a href="#" class="block py-1 md:py-3 pl-1 align-middle text-white-600 no-underline hover:text-indigo-400">
+                    <i class="fas fa-home fa-fw mr-3"></i><span class="w-full inline-block pb-1 md:pb-0 text-sm">Home</span>
+                </a>
+            </li>
+            <li class="my-2 md:my-0 ">
+                <a href="#" class="block py-1 md:py-3 pl-1 align-middle text-white-600 no-underline hover:text-indigo-400">
+                    <i class="fas fa-tasks fa-fw mr-3"></i><span class="w-full inline-block pb-1 md:pb-0 text-sm">Tasks</span>
+                </a>
+            </li>
+            <li class="my-2 md:my-0">
+                <a href="#" class="block py-1 md:py-3 pl-1 align-middle text-white-600 no-underline hover:text-indigo-400">
+                    <i class="fa fa-envelope fa-fw mr-3"></i><span class="w-full inline-block pb-1 md:pb-0 text-sm">Messages</span>
+                </a>
+            </li>
+            <li class="my-2 md:my-0">
+                <a href="#" class="block py-1 md:py-3 pl-1 align-middle text-white-600 no-underline hover:text-indigo-400">
+                    <i class="fas fa-chart-area fa-fw mr-3 text-indigo-400"></i><span class="w-full inline-block pb-1 md:pb-0 text-sm">Analytics</span>
+                </a>
+            </li>
+            <li class="my-2 md:my-0">
+                <a href="#" class="block py-1 md:py-3 pl-1 align-middle text-white-600 no-underline hover:text-indigo-400">
+                    <i class="fa fa-wallet fa-fw mr-3"></i><span class="w-full inline-block pb-1 md:pb-0 text-sm">Payments</span>
+                </a>
+            </li>
+        </ul>
+
+    </div>
+
+    <div class="flex flex-row flex-wrap flex-1 flex-grow content-start pl-16">
+
+        <div class="h-40 lg:h-20 w-full flex flex-wrap">
+            <nav id="header1" class="bg-gray-450 w-auto flex-1 border-b-1 border-gray-300 order-1 lg:order-2">
+
+                <div class="flex h-full justify-between items-center">
+
+                    <!--Search-->
+                    <div class="relative w-full max-w-3xl px-6">
+                        <div class="absolute h-10 mt-1 left-0 top-0 flex items-center pl-10">
+                            <svg class="h-4 w-4 fill-current text-gray-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path d="M12.9 14.32a8 8 0 1 1 1.41-1.41l5.35 5.33-1.42 1.42-5.33-5.34zM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"></path>
+                            </svg>
+                        </div>
+
+                        <input id="search-toggle" type="search" placeholder="search" class="block w-full bg-gray-200 focus:outline-none focus:bg-white focus:shadow-md text-gray-700 font-bold rounded-full pl-12 pr-4 py-3" onkeyup="updateSearchResults(this.value);">
+
+                    </div>
+                    <!-- / Search-->
+
+                    <!--Menu-->
+
+                    <div class="flex relative inline-block pr-6">
+
+                        <div class="flex justify-self-end relative text-sm">
+                            <button id="userButton" class="flex items-center focus:outline-none mr-3">
+                                <img class="w-8 h-8 rounded-full mr-4" src="http://i.pravatar.cc/300" alt="Avatar of User"> <span class="hidden md:inline-block">Hi, Dr Aurum </span>
+                                <svg class="pl-2 h-2" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 129 129" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 129 129">
+                                    <g>
+                                        <path d="m121.3,34.6c-1.6-1.6-4.2-1.6-5.8,0l-51,51.1-51.1-51.1c-1.6-1.6-4.2-1.6-5.8,0-1.6,1.6-1.6,4.2 0,5.8l53.9,53.9c0.8,0.8 1.8,1.2 2.9,1.2 1,0 2.1-0.4 2.9-1.2l53.9-53.9c1.7-1.6 1.7-4.2 0.1-5.8z"></path>
+                                    </g>
+                                </svg>
+                            </button>
+                            <div id="userMenu" class="bg-white nunito rounded shadow-md mt-2 absolute mt-12 top-0 right-0 min-w-full overflow-auto z-30 invisible">
+                                <ul class="list-reset">
+                                    <li><a href="#" class="px-4 py-2 block text-gray-900 hover:bg-indigo-400 hover:text-white no-underline hover:no-underline">My account</a></li>
+                                    <li><a href="#" class="px-4 py-2 block text-gray-900 hover:bg-indigo-400 hover:text-white no-underline hover:no-underline">Notifications</a></li>
+                                    <li>
+                                        <hr class="border-t mx-2 border-gray-400">
+                                    </li>
+                                    <li><a href="#" class="px-4 py-2 block text-gray-900 hover:bg-indigo-400 hover:text-white no-underline hover:no-underline">Logout</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- / Menu -->
+
+                </div>
+
+            </nav>
+        </div>
+
+        <!--Dash Content -->
+        <div id="dash-content" class="bg-gray-450 py-6 lg:py-0 w-full lg:max-w-sm flex flex-wrap content-start">
+
+            <div class="w-1/2 lg:w-full">
+                <div class="border-2 border-gray-400 border-dashed hover:border-transparent hover:bg-white hover:shadow-xl rounded p-6 m-2 md:mx-10 md:my-6">
+                    <div class="flex flex-col items-center">
+                        <div class="flex-shrink pr-4">
+                            <div class="rounded-full p-3 bg-gray-300"><i class="fa fa-heartbeat fa-fw fa-inverse text-indigo-500"></i></div>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-3xl">60% <span class="text-red-500"><i class="fas fa-caret-down"></i></span></h3>
+                            <h5 class="font-bold text-gray-500">SpO2</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-1/2 lg:w-full">
+                <div class="border-2 border-gray-400 border-dashed hover:border-transparent hover:bg-white hover:shadow-xl rounded p-6 m-2 md:mx-10 md:my-6">
+                    <div class="flex flex-col items-center">
+                        <div class="flex-shrink pr-4">
+                            <div class="rounded-full p-3 bg-gray-300"><i class="fa fa-thermometer-half fa-fw fa-inverse text-indigo-500"></i></div>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-3xl">24 <span class="text-orange-500"><i class="fas fa-exchange-alt"></i></span></h3>
+                            <h5 class="font-bold text-gray-500">Body Temp</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-1/2 lg:w-full">
+                <div class="border-2 border-gray-400 border-dashed hover:border-transparent hover:bg-white hover:shadow-xl rounded p-6 m-2 md:mx-10 md:my-6">
+                    <div class="flex flex-col items-center">
+                        <div class="flex-shrink pr-4">
+                            <div class="rounded-full p-3 bg-gray-300"><i class="fa fa-stethoscope fa-fw fa-inverse text-indigo-500"></i></div>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-3xl">40 <span class="text-red-600"><i class="fas fa-caret-down"></i></span></h3>
+                            <h5 class="font-bold text-gray-500">Bpm</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-1/2 lg:w-full">
+                <div class="border-2 border-gray-400 border-dashed hover:border-transparent hover:bg-white hover:shadow-xl rounded p-6 m-2 md:mx-10 md:my-6">
+                    <div class="flex flex-col items-center">
+                        <div class="flex-shrink pr-4">
+                            <div class="rounded-full p-3 bg-gray-300"><i class="fa fa-ambulance fa-fw fa-inverse text-indigo-500"></i></div>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-3xl">Urgent care needed</h3>
+                            <h5 class="font-bold text-gray-500">Patient Status</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!--Graph Content -->
+        <div id="main-content" class="w-full flex-1">
+
+            <div class="flex flex-1 flex-wrap">
+
+                <div class="w-full xl:w-2/3 p-6 xl:max-w-6xl">
+
+                    <!--"Container" for the graphs"-->
+                    <div class="max-w-full lg:max-w-3xl xl:max-w-5xl">
+
+                        <!--Graph Card-->
+                        <div class="border-b p-3">
+                            <h5 class="font-bold text-white">Vital Signs</h5>
+                        </div>
+                        <div class="p-5">
+                            <div class="ct-chart ct-golden-section" id="chart1"></div>
+                        </div>
+                        <!--/Graph Card-->
+
+                        <!--Table Card-->
+                        <div class="p-3">
+                            <div class="border-b p-3">
+                                <h5 class="font-bold text-white">Monthly Data</h5>
+                            </div>
+                            <div class="p-5">
+                                <div class="ct-chart ct-golden-section" id="chart5"></div>
+                            </div>
+                        </div>
+                        <!--/table Card-->
+
+                    </div>
+
+                </div>
+
+                <div class="w-full xl:w-1/3 p-6 xl:max-w-4xl border-l-1 border-gray-300">
+
+                    <!--"Container" for the graphs"-->
+                    <div class="max-w-sm lg:max-w-3xl xl:max-w-5xl">
+
+                        <!--Graph Card-->
+
+                        <div class="border-b p-3">
+                            <h5 class="font-bold text-white">SpO2</h5>
+                        </div>
+                        <div class="p-5">
+                            <div class="ct-chart ct-golden-section" id="chart2"></div>
+                        </div>
+
+                        <!--/Graph Card-->
+
+                        <!--Graph Card-->
+                        <div class="border-b p-3">
+                            <h5 class="font-bold text-white">Steps & Sleep</h5>
+                        </div>
+                        <div class="p-5">
+                            <div class="ct-chart ct-golden-section" id="chart3"></div>
+                        </div>
+
+                        <!--/Graph Card-->
+
+                        <!--Graph Card-->
+
+                        <div class="border-b p-3">
+                            <h5 class="font-bold text-white">Illnes Predictor</h5>
+                        </div>
+                        <div class="p-5">
+                            <div class="ct-chart ct-golden-section" id="chart4"></div>
+                        </div>
+
+                        <!--/Graph Card-->
+
+                        
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+    <script>
+        /* Refer to https://gionkunz.github.io/chartist-js/examples.html for setting up the graphs */
+
+        var chartScatter = new Chartist.Line('#chart1', {
+            labels: [1, 2, 3, 4, 5, 6, 7, 8],
+            series: [
+                [1, 2, 3, 1, -2, 0, 1, 0],
+                [-2, -1, -2, -1, -2.5, -1, -2, -1],
+                [0, 0, 0, 1, 2, 2.5, 2, 1],
+                [2.5, 2, 1, 0.5, 1, 0.5, -1, -2.5]
+            ]
+        }, {
+            high: 3, 
+            low: -3,
+            showArea: true,
+            showLine: false,
+            showPoint: false,
+            fullWidth: true,
+            axisX: {
+            showLabel: false,
+            showGrid: false
+            }
+        });
+
+        chartScatter.on('draw', function(data) {
+            if (data.type === 'line' || data.type === 'area') {
+                data.element.animate({
+                    d: {
+                        begin: 500 * data.index,
+                        dur: 1000,
+                        from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
+                        to: data.path.clone().stringify(),
+                        easing: Chartist.Svg.Easing.easeOutQuint
+                    }
+                });
+            }
+        });
+
+        var chartScatter = new Chartist.Line('#chart2', {
+            labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+            series: [
+                [120, 90, 70, 80, 50, 40, 60, 20, 30, 30, 40, 60],
+                [80, 89, 63, 78, 83, 85, 86, 63, 74, 84, 85, 90],
+                [85, 83, 84, 85, 86, 83, 83, 84, 85, 86, 83, 84],
+                [73, 64, 75, 86, 77, 76, 84, 85, 86, 77, 76, 83]
+            ]
+        }, {
+            high: 150,
+            low: 0
+        });
+
+        chartScatter.on('draw', function(data) {
+            if (data.type === 'line' || data.type === 'area') {
+                data.element.animate({
+                    d: {
+                        begin: 500 * data.index,
+                        dur: 1000,
+                        from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
+                        to: data.path.clone().stringify(),
+                        easing: Chartist.Svg.Easing.easeOutQuint
+                    }
+                });
+            }
+        });
+
+        var chartBar = new Chartist.Bar('#chart3', {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu','Fri','Sat','Sun'],
+            series: [
+                [80, 120, 140, 130],
+                [20, 49, 56, 38]
+            ]
+        }, {
+        showGrid: true,
+        showLabel: false
+        });
+
+        chartBar.on('draw', function(data) {
+            if (data.type === 'bar') {
+                data.element.attr({
+                        style: 'stroke-width: 30px'
+                    }),
+                    data.element.animate({
+                        y2: {
+                            dur: '0.5s',
+                            from: data.y1,
+                            to: data.y2
+                        }
+                    });
+            }
+        });
+
+        var chartPie = new Chartist.Pie('#chart4', {
+            series: [10, 20, 50, 20, 5, 50, 15],
+            labels: [1, 2, 3, 4, 5, 6, 7]
+        }, {
+            donut: true,
+            showLabel: true
+        });
+
+        chartPie.on('draw', function(data) {
+            if (data.type === 'slice') {
+                var pathLength = data.element._node.getTotalLength();
+                data.element.attr({
+                    'stroke-dasharray': pathLength + 'px ' + pathLength + 'px'
+                });
+
+                var animationDefinition = {
+                    'stroke-dashoffset': {
+                        id: 'anim' + data.index,
+                        dur: 200,
+                        from: -pathLength + 'px',
+                        to: '0px',
+                        easing: Chartist.Svg.Easing.easeOutQuint,
+                        fill: 'freeze'
+                    }
+                };
+
+                if (data.index !== 0) {
+                    animationDefinition['stroke-dashoffset'].begin = 'anim' + (data.index - 1) + '.end';
+                }
+
+                data.element.attr({
+                    'stroke-dashoffset': -pathLength + 'px'
+                });
+
+                data.element.animate(animationDefinition, false);
+            }
+        });
+        var chart = new Chartist.Line('#chart5', {
+  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+  series: [
+    [1, 5, 2, 5, 4, 3,],
+    [2, 3, 4, 8, 1, 2],
+    [7, 3.5, 6, 1, 9, 0.5]
+  ]
+}, {
+  high: 10,  
+  low: 0,
+  showArea: true,
+  showPoint: true,
+  fullWidth: true,
+  showLine: false,
+});
+
+chart.on('draw', function(data) {
+  if(data.type === 'line' || data.type === 'area') {
+    data.element.animate({
+      d: {
+        begin: 2000 * data.index,
+        dur: 2000,
+        from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
+        to: data.path.clone().stringify(),
+        easing: Chartist.Svg.Easing.easeOutQuint
+      }
+    });
+  }
+});
+    </script>
+
+    <script>
+        /*Toggle dropdown list*/
+        /*https://gist.github.com/slavapas/593e8e50cf4cc16ac972afcbad4f70c8*/
+
+        var userMenuDiv = document.getElementById("userMenu");
+        var userMenu = document.getElementById("userButton");
+
+        document.onclick = check;
+
+        function check(e) {
+            var target = (e && e.target) || (event && event.srcElement);
+
+            //User Menu
+            if (!checkParent(target, userMenuDiv)) {
+                // click NOT on the menu
+                if (checkParent(target, userMenu)) {
+                    // click on the link
+                    if (userMenuDiv.classList.contains("invisible")) {
+                        userMenuDiv.classList.remove("invisible");
+                    } else {
+                        userMenuDiv.classList.add("invisible");
+                    }
+                } else {
+                    // click both outside link and outside menu, hide menu
+                    userMenuDiv.classList.add("invisible");
+                }
+            }
+
+        }
+
+        function checkParent(t, elm) {
+            while (t.parentNode) {
+                if (t == elm) {
+                    return true;
+                }
+                t = t.parentNode;
+            }
+            return false;
+        }
+    </script>
+
+</body>
+
+</html>
